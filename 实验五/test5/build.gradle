@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id "info.solidsoft.pitest" version "1.7.4"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+apply from: "$rootDir/gradle/config/scripts/style.gradle"
+apply from: "$rootDir/gradle/config/scripts/coverage.gradle"
+
+coverage.excludePackages = [
+]
+coverage.excludeClasses = [
+]
+style.excludePackages = [
+]
+style.excludeClasses = [
+]
+
+tasks.withType(JavaCompile){
+    options.encoding("utf-8")
+}
+
+pitest {
+    targetClasses = ['org.example.*']
+    threads = 4
+    outputFormats = ['HTML']
+    timestampedReports = true
+    junit5PluginVersion = '0.15'
+}
